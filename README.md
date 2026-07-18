@@ -10,10 +10,10 @@ The demo accepts hospital, factory, or project-state signals and routes the outp
 
 ## Live Demo
 
-After GitHub Pages is enabled, the public demo URL should look like:
+After GitHub Pages is enabled, the public demo URL should be:
 
 ```text
-https://YOUR_GITHUB_USERNAME.github.io/veyanet-decision-gate/
+https://ahmetbulentdemirbag-wq.github.io/veyanet-decision-gate/
 ```
 
 ## Run Locally

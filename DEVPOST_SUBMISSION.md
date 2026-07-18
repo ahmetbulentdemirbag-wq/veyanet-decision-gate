@@ -39,10 +39,10 @@ Before final submission, add the required `/feedback` Codex Session ID from the 
 
 ```text
 Live demo:
-https://YOUR_GITHUB_USERNAME.github.io/veyanet-decision-gate/
+https://ahmetbulentdemirbag-wq.github.io/veyanet-decision-gate/
 
 Code repository:
-https://github.com/YOUR_GITHUB_USERNAME/veyanet-decision-gate
+https://github.com/ahmetbulentdemirbag-wq/veyanet-decision-gate
 
 YouTube demo:
 https://www.youtube.com/watch?v=YOUR_VIDEO_ID

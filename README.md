@@ -16,24 +16,19 @@ After GitHub Pages is enabled, the public demo URL should look like:
 https://YOUR_GITHUB_USERNAME.github.io/veyanet-decision-gate/
 ```
 
-## Presentation Preview
-
-![VeyaNet Decision Gate YouTube deck montage](screenshots/youtube-deck-montage.png)
-
 ## Run Locally
 
 Open `index.html` in a browser.
 
 No build step, server, API key, package install, or backend is required.
 
-## Video Preparation Files
+## Video Preparation
 
-The `presentation/` folder includes:
+The YouTube narration draft is included at:
 
-- `VeyaNet_Decision_Gate_YouTube_Deck.pptx`
-- `VeyaNet_Decision_Gate_YouTube_Narration.txt`
+- `presentation/VeyaNet_Decision_Gate_YouTube_Narration.txt`
 
-These files are intended for the public YouTube demo video and NotebookLM-style narration preparation.
+The visual slide deck and source architecture images were prepared as companion video assets. They are not required for the live browser demo.
 
 ## What This Prototype Demonstrates
 
@@ -53,9 +48,9 @@ This project does not attempt to build a full hospital automation system, factor
 - **Factory Line**: sensor drift and maintenance signals are routed before operational action.
 - **Project Rescue**: repo, build, README, and demo readiness are assessed before submission.
 
-## Included Visual References
+## Reference Architecture Concepts
 
-The `assets/` folder contains supporting architecture references for:
+The live demo includes reference architecture cards for:
 
 - Integrated VeyaNet decision pipeline schema
 - GitOps / Kubernetes deployment flow
@@ -63,7 +58,7 @@ The `assets/` folder contains supporting architecture references for:
 - Agentic loop workflow
 - Physical facility or operational zone mapping
 
-These images are context adapters. They do not expose protected VeyaNet core logic.
+These are context adapters. They do not expose protected VeyaNet core logic.
 
 ## Future Algorithm Hook
 

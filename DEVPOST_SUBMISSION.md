@@ -27,7 +27,7 @@ The demo keeps VeyaNet as a final result gate. The protected core is not exposed
 - Displays only the final VeyaNet result: `PASS`, `REVIEW`, or `BLOCK`.
 - Routes uncertain outputs to evidence collection and human review.
 - Shows a pipeline view with threshold calibration, negative control, audit ledger, revision loop, Q/V time-series, and early warning.
-- Includes reference architecture images for clinical systems, PostgreSQL, GitOps/Kubernetes, agentic loops, and physical operations.
+- Includes reference architecture cards for clinical systems, PostgreSQL, GitOps/Kubernetes, agentic loops, and physical operations.
 
 ## How It Uses Codex / GPT-5.6
 

@@ -360,12 +360,30 @@
       background: #f8fbfd;
     }
 
-    .reference-card img {
+    .reference-visual {
       width: 100%;
       height: 160px;
-      object-fit: cover;
       background: var(--surface-soft);
       border-bottom: 1px solid var(--line);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 8px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .reference-visual b {
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    .reference-visual span {
+      max-width: 180px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     .reference-card div {
@@ -541,35 +559,50 @@
         </div>
         <div class="reference-grid">
           <article class="reference-card primary">
-            <img src="assets/pipeline-integrated-schema.png" alt="Integrated pipeline schema with threshold calibration, decision engine, PASS, REVIEW, BLOCK, Q/V time series, and early warning system">
+            <div class="reference-visual" aria-label="Integrated pipeline schema">
+              <b>PASS / REVIEW / BLOCK</b>
+              <span>Integrated pipeline</span>
+            </div>
             <div>
               <strong>Integrated Decision Pipeline</strong>
               <span>Threshold calibration, negative controls, audit ledger, revision loop, and early warning route.</span>
             </div>
           </article>
           <article class="reference-card">
-            <img src="assets/gitops-kubernetes.png" alt="GitHub Actions, Docker, ArgoCD, and Kubernetes deployment flow">
+            <div class="reference-visual" aria-label="GitOps and Kubernetes deployment flow">
+              <b>GitOps</b>
+              <span>Kubernetes release gate</span>
+            </div>
             <div>
               <strong>GitOps / Kubernetes</strong>
               <span>Deployment outputs can be routed to 1 / 0 / V before release.</span>
             </div>
           </article>
           <article class="reference-card">
-            <img src="assets/postgresql-client-server.png" alt="PostgreSQL client server model">
+            <div class="reference-visual" aria-label="PostgreSQL client server data backbone">
+              <b>PostgreSQL</b>
+              <span>Traceable data backbone</span>
+            </div>
             <div>
               <strong>PostgreSQL Data Backbone</strong>
               <span>Patient, audit, and operational records provide traceable evidence.</span>
             </div>
           </article>
           <article class="reference-card">
-            <img src="assets/agentic-loop.jpg" alt="Agentic loop with create, execute, diagnose, maintain, and document stages">
+            <div class="reference-visual" aria-label="Agentic workflow loop">
+              <b>Agent Loop</b>
+              <span>Create execute diagnose</span>
+            </div>
             <div>
               <strong>Agentic Loop</strong>
               <span>Create, execute, diagnose, maintain, and document loops feed the gate.</span>
             </div>
           </article>
           <article class="reference-card">
-            <img src="assets/facility-architecture.jpg" alt="Axonometric facility architecture diagram">
+            <div class="reference-visual" aria-label="Physical operations mapping">
+              <b>Operations</b>
+              <span>Hospital factory facility</span>
+            </div>
             <div>
               <strong>Physical Operations</strong>
               <span>Hospital, factory, and facility zones can be mapped into supervised actions.</span>

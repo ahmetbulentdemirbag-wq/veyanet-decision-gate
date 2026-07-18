@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VeyaNet Decision Gate</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --surface-soft: #eef3f8;
+      --line: #d7e0ea;
+      --text: #17212b;
+      --muted: #5c6b7a;
+      --green: #157a4b;
+      --green-bg: #e7f5ef;
+      --red: #b42318;
+      --red-bg: #fff0ee;
+      --amber: #a15c00;
+      --amber-bg: #fff4df;
+      --cyan: #047481;
+      --cyan-bg: #e5f7fa;
+      --shadow: 0 12px 28px rgba(23, 33, 43, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      background: #16202a;
+      color: #f8fbfd;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    main {
+      padding: 24px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 18px;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 18px;
+    }
+
+    h3 {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      color: #c9d5df;
+      font-size: 14px;
+    }
+
+    .stamp {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 12px;
+      color: #c9d5df;
+    }
+
+    .scenario-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .scenario-button {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #f8fbfd;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .scenario-button:hover,
+    .scenario-button.active {
+      background: #284052;
+      border-color: #6ba8c4;
+    }
+
+    .scenario-button strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .scenario-button span {
+      color: #c9d5df;
+      font-size: 12px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      max-width: 820px;
+    }
+
+    .run-button {
+      border: 0;
+      border-radius: 8px;
+      background: #125c6b;
+      color: #fff;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    .run-button:hover {
+      background: #0d4d59;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+      gap: 18px;
+      min-height: 0;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .input-panel {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .control {
+      display: grid;
+      gap: 7px;
+    }
+
+    .control label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .control small {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #125c6b;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      gap: 4px;
+      min-height: 92px;
+    }
+
+    .metric b {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .metric.pass {
+      background: var(--green-bg);
+      border-color: #9bd8bd;
+      color: var(--green);
+    }
+
+    .metric.fail {
+      background: var(--red-bg);
+      border-color: #f0b3ad;
+      color: var(--red);
+    }
+
+    .metric.uncertain {
+      background: var(--amber-bg);
+      border-color: #f1ce8b;
+      color: var(--amber);
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      margin: 18px 0;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 11px;
+      min-height: 92px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      position: relative;
+    }
+
+    .step strong {
+      font-size: 13px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .step.done {
+      border-color: #95cfc6;
+      background: var(--cyan-bg);
+    }
+
+    .step.locked {
+      border-color: #f1ce8b;
+      background: var(--amber-bg);
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+      gap: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .queue {
+      display: grid;
+      gap: 10px;
+    }
+
+    .queue-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+      display: grid;
+      gap: 4px;
+    }
+
+    .queue-item strong {
+      font-size: 13px;
+    }
+
+    .queue-item span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .architecture-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .architecture-panel > p {
+      color: var(--muted);
+      max-width: 980px;
+    }
+
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .reference-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      display: grid;
+      grid-template-rows: 160px auto;
+      min-width: 0;
+    }
+
+    .reference-card.primary {
+      border-color: #9ab7d4;
+      background: #f8fbfd;
+    }
+
+    .reference-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: var(--surface-soft);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .reference-card div {
+      padding: 12px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .reference-card strong {
+      font-size: 13px;
+    }
+
+    .reference-card span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .badge.pass {
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .badge.fail {
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .badge.uncertain {
+      color: var(--amber);
+      background: var(--amber-bg);
+    }
+
+    .notice {
+      border: 1px solid #b7c7d8;
+      background: #f8fbfd;
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 1080px) {
+      .app,
+      .workspace,
+      .columns,
+      .topbar,
+      .reference-grid {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        min-height: auto;
+      }
+
+      .pipeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      main,
+      aside {
+        padding: 16px;
+      }
+
+      .result-grid,
+      .pipeline,
+      .reference-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div>
+        <h1>VeyaNet Decision Gate</h1>
+        <p class="subtitle">A human-supervised 1 / 0 / V decision layer for hospital, factory, and project outputs.</p>
+      </div>
+
+      <div class="scenario-list" id="scenarioList"></div>
+
+      <div class="notice">
+        VeyaNet is displayed as the final gate result. Internal core logic is not exposed in this demo.
+      </div>
+
+      <div class="stamp">
+        ORCID: Dr. Ahmet Bulent Demirbag<br>
+        0000-0002-9349-1464
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <h2 id="caseTitle">Decision case</h2>
+          <p id="caseDescription">Select a scenario and run the pipeline.</p>
+        </div>
+        <button class="run-button" id="runButton" type="button">Run Pipeline</button>
+      </header>
+
+      <section class="workspace">
+        <div class="panel input-panel">
+          <h3>Uncertainty Formula Inputs</h3>
+          <div id="controls"></div>
+          <div class="notice">
+            The current MVP uses a deterministic, replaceable formula to route uncertainty. The full VeyaNet algorithm can be connected later behind the same interface.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="result-grid">
+            <div class="metric" id="veyaNetMetric">
+              <span>VeyaNet result</span>
+              <b id="decisionValue">-</b>
+              <small id="decisionLabel">Waiting</small>
+            </div>
+            <div class="metric">
+              <span>Uncertainty index</span>
+              <b id="uncertaintyValue">0.00</b>
+              <small>Formula output</small>
+            </div>
+            <div class="metric">
+              <span>Human review</span>
+              <b id="reviewValue">-</b>
+              <small id="reviewLabel">Not evaluated</small>
+            </div>
+          </div>
+
+          <h3>Pipeline</h3>
+          <div class="pipeline" id="pipeline"></div>
+
+          <div class="columns">
+            <div>
+              <h3>Audit Ledger</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Stage</th>
+                    <th>Status</th>
+                    <th>Output</th>
+                  </tr>
+                </thead>
+                <tbody id="ledger"></tbody>
+              </table>
+            </div>
+
+            <div>
+              <h3>Resolution Queue</h3>
+              <div class="queue" id="queue"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel architecture-panel">
+        <div>
+          <h3>Reference Architecture</h3>
+          <p>
+            The gate can sit after clinical systems, factory systems, DevOps pipelines, or agentic workflows. These references are context adapters; the protected VeyaNet core remains behind the final result interface.
+          </p>
+        </div>
+        <div class="reference-grid">
+          <article class="reference-card primary">
+            <img src="assets/pipeline-integrated-schema.png" alt="Integrated pipeline schema with threshold calibration, decision engine, PASS, REVIEW, BLOCK, Q/V time series, and early warning system">
+            <div>
+              <strong>Integrated Decision Pipeline</strong>
+              <span>Threshold calibration, negative controls, audit ledger, revision loop, and early warning route.</span>
+            </div>
+          </article>
+          <article class="reference-card">
+            <img src="assets/gitops-kubernetes.png" alt="GitHub Actions, Docker, ArgoCD, and Kubernetes deployment flow">
+            <div>
+              <strong>GitOps / Kubernetes</strong>
+              <span>Deployment outputs can be routed to 1 / 0 / V before release.</span>
+            </div>
+          </article>
+          <article class="reference-card">
+            <img src="assets/postgresql-client-server.png" alt="PostgreSQL client server model">
+            <div>
+              <strong>PostgreSQL Data Backbone</strong>
+              <span>Patient, audit, and operational records provide traceable evidence.</span>
+            </div>
+          </article>
+          <article class="reference-card">
+            <img src="assets/agentic-loop.jpg" alt="Agentic loop with create, execute, diagnose, maintain, and document stages">
+            <div>
+              <strong>Agentic Loop</strong>
+              <span>Create, execute, diagnose, maintain, and document loops feed the gate.</span>
+            </div>
+          </article>
+          <article class="reference-card">
+            <img src="assets/facility-architecture.jpg" alt="Axonometric facility architecture diagram">
+            <div>
+              <strong>Physical Operations</strong>
+              <span>Hospital, factory, and facility zones can be mapped into supervised actions.</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const scenarios = [
+      {
+        id: "hospital",
+        name: "Hospital Automation",
+        tag: "Lab, patient, clinician review",
+        title: "SNHL triage output with incomplete evidence",
+        description: "A hospital automation output arrives from a biomedical analysis pipeline. The gate must decide whether to proceed, stop, or route to human review.",
+        values: {
+          evidence: 0.56,
+          agreement: 0.61,
+          confidence: 0.67,
+          severity: 0.78,
+          audit: 0.82,
+          humanImpact: 0.92
+        }
+      },
+      {
+        id: "factory",
+        name: "Factory Line",
+        tag: "Sensor drift, safety, maintenance",
+        title: "Production line anomaly with sensor drift",
+        description: "A factory sensor output reports instability on a line. The gate must decide whether the line can continue or needs review and repair planning.",
+        values: {
+          evidence: 0.72,
+          agreement: 0.48,
+          confidence: 0.58,
+          severity: 0.70,
+          audit: 0.74,
+          humanImpact: 0.66
+        }
+      },
+      {
+        id: "project",
+        name: "Project Rescue",
+        tag: "Repo, build, Devpost readiness",
+        title: "Build submission with uncertain project state",
+        description: "A code project appears close to submission, but build scripts, repo access, and demo readiness need a final gate before submission.",
+        values: {
+          evidence: 0.64,
+          agreement: 0.69,
+          confidence: 0.62,
+          severity: 0.42,
+          audit: 0.58,
+          humanImpact: 0.35
+        }
+      }
+    ];
+
+    const controls = [
+      ["evidence", "Evidence completeness", "Required records, measurements, files"],
+      ["agreement", "Signal agreement", "Cross-source consistency"],
+      ["confidence", "Model confidence", "Classifier or system confidence"],
+      ["severity", "Risk severity", "Operational or clinical consequence"],
+      ["audit", "Audit integrity", "Traceability and log quality"],
+      ["humanImpact", "Human impact", "Need for supervised decision"]
+    ];
+
+    const pipelineStages = [
+      ["Threshold Calibration", "Sets the current decision envelope"],
+      ["Negative Control", "Checks false-positive and false-negative routes"],
+      ["Audit Ledger", "Confirms traceability before action"],
+      ["Revision Loop", "Creates governed repair and re-check tasks"],
+      ["Decision Engine", "Routes the packet to PASS, REVIEW, or BLOCK"],
+      ["Q/V Time-Series", "Tracks strengthening or weakening signals"],
+      ["VeyaNet Result", "Returns only the final 1 / V / 0 gate label"],
+      ["Early Warning", "Escalates when Q/V crosses the alarm threshold"]
+    ];
+
+    let activeScenario = scenarios[0];
+    let currentValues = { ...activeScenario.values };
+
+    const scenarioList = document.getElementById("scenarioList");
+    const controlsRoot = document.getElementById("controls");
+    const pipelineRoot = document.getElementById("pipeline");
+    const ledgerRoot = document.getElementById("ledger");
+    const queueRoot = document.getElementById("queue");
+    const caseTitle = document.getElementById("caseTitle");
+    const caseDescription = document.getElementById("caseDescription");
+    const decisionValue = document.getElementById("decisionValue");
+    const decisionLabel = document.getElementById("decisionLabel");
+    const uncertaintyValue = document.getElementById("uncertaintyValue");
+    const reviewValue = document.getElementById("reviewValue");
+    const reviewLabel = document.getElementById("reviewLabel");
+    const veyaNetMetric = document.getElementById("veyaNetMetric");
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function format(value) {
+      return value.toFixed(2);
+    }
+
+    function computeDecision(values) {
+      const unresolved =
+        (1 - values.evidence) * 0.24 +
+        (1 - values.agreement) * 0.20 +
+        (1 - values.confidence) * 0.18 +
+        values.severity * 0.14 +
+        (1 - values.audit) * 0.14 +
+        values.humanImpact * 0.10;
+
+      const stability = values.evidence * values.agreement * values.confidence * values.audit;
+      const uncertainty = clamp(unresolved * 0.65 + (1 - stability) * 0.35, 0, 1);
+
+      if (uncertainty >= 0.45 || values.confidence < 0.58 || values.evidence < 0.55) {
+        return {
+          result: "V",
+          label: "REVIEW",
+          stateClass: "uncertain",
+          uncertainty,
+          review: "Required",
+          action: "Route to evidence collection and human review"
+        };
+      }
+
+      if (values.severity >= 0.72 && values.agreement < 0.65) {
+        return {
+          result: "0",
+          label: "BLOCK",
+          stateClass: "fail",
+          uncertainty,
+          review: "Required",
+          action: "Block action and escalate to supervisor"
+        };
+      }
+
+      if (
+        values.confidence >= 0.72 &&
+        values.evidence >= 0.72 &&
+        values.agreement >= 0.70 &&
+        values.audit >= 0.70 &&
+        uncertainty < 0.32
+      ) {
+        return {
+          result: "1",
+          label: "PASS",
+          stateClass: "pass",
+          uncertainty,
+          review: "Optional",
+          action: "Proceed with monitored execution"
+        };
+      }
+
+      return {
+        result: "V",
+        label: "REVIEW",
+        stateClass: "uncertain",
+        uncertainty,
+        review: "Required",
+        action: "Hold final action and request missing evidence"
+      };
+    }
+
+    function makeResolutionQueue(values, decision) {
+      const items = [];
+
+      if (values.evidence < 0.70) {
+        items.push(["Evidence gap", "Collect missing record, measurement, file, or source confirmation."]);
+      }
+
+      if (values.agreement < 0.70) {
+        items.push(["Signal conflict", "Compare source outputs and repeat the unstable measurement or sensor read."]);
+      }
+
+      if (values.confidence < 0.70) {
+        items.push(["Model confidence", "Send the case to a second model, rule check, or domain reviewer."]);
+      }
+
+      if (values.audit < 0.70) {
+        items.push(["Audit weakness", "Record provenance, timestamp, operator, and system version before action."]);
+      }
+
+      if (values.severity >= 0.70 || values.humanImpact >= 0.70) {
+        items.push(["Human review", "Keep autonomous execution locked until a responsible reviewer approves."]);
+      }
+
+      if (items.length === 0 && decision.result === "1") {
+        items.push(["Monitor", "Proceed, keep telemetry open, and re-run the gate if new evidence arrives."]);
+      }
+
+      if (decision.result === "0") {
+        items.unshift(["Stop route", "Suspend the action path and open a supervisor review task."]);
+      }
+
+      return items;
+    }
+
+    function renderScenarios() {
+      scenarioList.innerHTML = "";
+      scenarios.forEach((scenario) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `scenario-button ${scenario.id === activeScenario.id ? "active" : ""}`;
+        button.innerHTML = `<strong>${scenario.name}</strong><span>${scenario.tag}</span>`;
+        button.addEventListener("click", () => {
+          activeScenario = scenario;
+          currentValues = { ...scenario.values };
+          render();
+        });
+        scenarioList.appendChild(button);
+      });
+    }
+
+    function renderControls() {
+      controlsRoot.innerHTML = "";
+      controls.forEach(([key, label, help]) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "control";
+        wrapper.innerHTML = `
+          <label for="${key}">
+            <span>${label}</span>
+            <small id="${key}Value">${format(currentValues[key])}</small>
+          </label>
+          <input id="${key}" type="range" min="0" max="1" value="${currentValues[key]}" step="0.01" aria-label="${label}">
+          <small>${help}</small>
+        `;
+        const input = wrapper.querySelector("input");
+        input.addEventListener("input", (event) => {
+          currentValues[key] = Number(event.target.value);
+          document.getElementById(`${key}Value`).textContent = format(currentValues[key]);
+          renderResults();
+        });
+        controlsRoot.appendChild(wrapper);
+      });
+    }
+
+    function renderPipeline(decision) {
+      pipelineRoot.innerHTML = "";
+      pipelineStages.forEach(([name, detail], index) => {
+        const step = document.createElement("div");
+        const locked = (index === 3 || index === 7) && decision.review === "Required";
+        step.className = `step ${locked ? "locked" : "done"}`;
+        step.innerHTML = `<strong>${name}</strong><span>${detail}</span>`;
+        pipelineRoot.appendChild(step);
+      });
+    }
+
+    function renderLedger(decision) {
+      const rows = [
+        ["Intake", "Complete", activeScenario.name],
+        ["Formula", "Complete", `U = ${format(decision.uncertainty)}`],
+        ["VeyaNet", decision.label, `Result = ${decision.result}`],
+        ["Route", decision.review, decision.action],
+        ["Audit", "Recorded", new Date().toLocaleString()]
+      ];
+
+      ledgerRoot.innerHTML = rows.map(([stage, status, output]) => `
+        <tr>
+          <td>${stage}</td>
+          <td><span class="badge ${decision.stateClass}">${status}</span></td>
+          <td>${output}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderQueue(decision) {
+      const items = makeResolutionQueue(currentValues, decision);
+      queueRoot.innerHTML = items.map(([title, detail]) => `
+        <div class="queue-item">
+          <strong>${title}</strong>
+          <span>${detail}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderResults() {
+      const decision = computeDecision(currentValues);
+      decisionValue.textContent = decision.result;
+      decisionLabel.textContent = decision.label;
+      uncertaintyValue.textContent = format(decision.uncertainty);
+      reviewValue.textContent = decision.review === "Required" ? "LOCK" : "OPEN";
+      reviewLabel.textContent = decision.action;
+      veyaNetMetric.className = `metric ${decision.stateClass}`;
+
+      renderPipeline(decision);
+      renderLedger(decision);
+      renderQueue(decision);
+    }
+
+    function render() {
+      caseTitle.textContent = activeScenario.title;
+      caseDescription.textContent = activeScenario.description;
+      renderScenarios();
+      renderControls();
+      renderResults();
+    }
+
+    document.getElementById("runButton").addEventListener("click", renderResults);
+    render();
+  </script>
+</body>
+</html>

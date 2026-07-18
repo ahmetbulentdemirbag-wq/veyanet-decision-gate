@@ -1,0 +1,9 @@
+Copyright (c) 2026 Dr. Ahmet Bülent Demirbağ.
+
+All rights reserved.
+
+This repository is published for OpenAI Build Week judging, demonstration, and review. You may view, run, and evaluate the prototype for those purposes.
+
+No permission is granted to copy, modify, redistribute, sublicense, commercialize, patent, train models on, or derive competing systems from this work without prior written permission from the author.
+
+This prototype does not disclose the protected VeyaNet core algorithm. It demonstrates a public decision-gate interface and workflow-routing pattern.

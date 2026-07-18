@@ -25,7 +25,7 @@ Devpost judges need links that work outside this ChatGPT workspace. Local `sandb
 Expected live URL:
 
 ```text
-https://YOUR_GITHUB_USERNAME.github.io/veyanet-decision-gate/
+https://ahmetbulentdemirbag-wq.github.io/veyanet-decision-gate/
 ```
 
 ## If The Repository Must Stay Private

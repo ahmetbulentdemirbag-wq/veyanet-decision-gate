@@ -1,0 +1,32 @@
+VeyaNet Decision Gate - YouTube Konuşma Metni
+ORŞİT MÜHRÜ | Dr. Ahmet Bülent Demirbağ | ORCID 0000-0002-9349-1464
+
+SLIDE 1
+Bu videoda tam bir hastane ya da fabrika otomasyonu sunmuyoruz. Asıl fikir, bu sistemlerden gelen çıktıları VeyaNet karar kapısından geçirmek. VeyaNet dışarıya yalnızca sonuç verir: 1 ise PASS, V ise REVIEW, 0 ise BLOCK. Böylece belirsiz olan kararlar otomatik ilerlemez; çözüm arayışına ve insan denetimine yönlenir.
+
+SLIDE 2
+Buradaki ana problem şudur: modern sistemler sürekli çıktı üretir, ama her çıktı güvenli karar anlamına gelmez. Klinik sistemde rapor çıkabilir, fabrikada sensör alarm verebilir, GitHub tarafında build çalışabilir. Fakat eksik veri, çelişkili sinyal veya düşük güven varsa otomatik ilerleme tehlikelidir. VeyaNet bu noktada karar kapısıdır.
+
+SLIDE 3
+Bugün elimizde küçük ama çalışan bir demo var. Bu önemli, çünkü sadece fikir anlatmıyoruz; kullanıcı senaryo seçiyor, belirsizlik skoru değişiyor, sistem VeyaNet sonucunu üretiyor ve insan denetimi kilidini gösteriyor. Ancak bu tam ürün değildir. Yarışma için bunu repo, README ve kısa video ile paketlememiz gerekir.
+
+SLIDE 4
+Bu şema bizim için çok değerli. Çünkü VeyaNet'i açıklama motoru gibi açmadan, karar sonucunu gösteriyor. Eşik kalibrasyonu ve negatif kontrol yanlış alarmı azaltır. Audit ledger iz bırakır. Governed revision loop ise belirsizliği çözüm arayışına çevirir. Video içinde bu slayt ana teknik omurga olarak kullanılmalı.
+
+SLIDE 5
+Bu klinik mimariyi sunarken dikkatli olmalıyız. Burada tam bir klinik ürün iddiası yok. VeyaNet klinik tanı koyan sistem gibi gösterilmemeli. Doğru ifade şu: klinik sistemden çıkan sonucun güvenli karar rotasına alınması. VeyaNet, belirsizliği fark eder, doktoru devrede tutar ve audit kaydı üretir.
+
+SLIDE 6
+Bu slayt iki altyapı parçasını anlatır. PostgreSQL veri bütünlüğü ve audit için güçlü bir omurgadır. GitOps ve Kubernetes ise modern yazılımın yayılım hattını temsil eder. VeyaNet Decision Gate bu iki dünyayı birbirine bağlayabilir: veri güvenilirliği ve operasyonel karar güvenliği.
+
+SLIDE 7
+VeyaNet'in değeri burada büyüyor. Aynı karar kapısı yalnızca klinikte değil, agentic workflow içinde de çalışabilir. Bir agent plan üretir, çalıştırır, teşhis eder ve bakım önerir. Fiziksel operasyonlarda da oda, hat, cihaz veya tesis bölgeleri karar noktası olabilir. Hepsinde ortak soru aynıdır: PASS, REVIEW ya da BLOCK.
+
+SLIDE 8
+Sorduğunuz en önemli soru bu: bu kadar yeterli mi? Dürüst cevap: sadece görseller yetmez. Ama elimizde çalışan bir HTML prototip var; bu çok önemli. Tam ürün yetişmez, fakat yarışma için daraltılmış çalışan demo, repo, README ve üç dakikalık video ile anlamlı bir teslim yapılabilir.
+
+SLIDE 9
+Bundan sonra yapacağımız şey yeni büyük modül eklemek değil. Zaman az. Demo akışını sabitleyeceğiz, README'yi yazacağız, videoyu çekeceğiz ve Devpost formunu dolduracağız. Büyük VeyaNet algoritması sonraki aşamaya kalmalı. Bugün görevimiz fikrin çalışan çekirdeğini güvenli şekilde göstermek.
+
+SLIDE 10
+Kapanışta şu cümle yeterli olur: VeyaNet Decision Gate, sistemlerin karar vermesini değil, kararların güvenli denetlenmesini hedefler. Her çıktı PASS, REVIEW veya BLOCK rotasına alınır. Belirsizlik gizlenmez; çözüm arayışına ve insan denetimine çevrilir. Bu demo tam ürün değildir, ama büyük VeyaNet mimarisinin çalışan ve anlaşılır kapısıdır.

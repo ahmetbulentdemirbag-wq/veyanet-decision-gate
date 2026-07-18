@@ -1,0 +1,2 @@
+[console_scripts]
+vdg-demo = veyanet_decision_gate.cli:main

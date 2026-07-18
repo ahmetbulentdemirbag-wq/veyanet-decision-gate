@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: veyanet-decision-gate
+Version: 0.1.0
+Summary: VeyaNet Decision Gate — supervised PASS/REVIEW/BLOCK uncertainty routing demo
+License: MIT
+Keywords: decision-gate,uncertainty,routing,supervised,safety
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+
+# veyanet-decision-gate
+VeyaNet Decision Gate - supervised PASS/REVIEW/BLOCK uncertainty routing demo

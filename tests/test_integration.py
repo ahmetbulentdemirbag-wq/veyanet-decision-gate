@@ -36,12 +36,11 @@ class TestEndToEndRouting:
 
     def test_ambiguous_text_routes_to_review(self, pipeline):
         clf, gate = pipeline
-        # One safe and one unsafe keyword — genuinely uncertain
+        # "hack" (unsafe) and "secure" (safe) keywords cancel each other out —
+        # equal safe/unsafe scores place this squarely in the REVIEW zone.
         output = clf.classify("Can you hack in a secure way?")
         result = gate.route(output)
-        # The exact label depends on keyword weights; important thing is the
-        # label is *not* the same as pure safe/unsafe extreme cases.
-        assert result.label in (DecisionLabel.REVIEW, DecisionLabel.PASS, DecisionLabel.BLOCK)
+        assert result.label is DecisionLabel.REVIEW
 
     def test_all_labels_reachable(self, pipeline):
         clf, gate = pipeline
@@ -54,6 +53,10 @@ class TestEndToEndRouting:
                 "exploit malware ransomware hack attack illegal fraud scam "
                 "dangerous weapon violence abuse jailbreak phishing"
             ),
+            DecisionLabel.REVIEW: (
+                # Equal mix of safe and unsafe keywords keeps scores near 0.5
+                "Can you hack in a secure way?"
+            ),
         }
         labels = set()
         for text in inputs.values():
@@ -61,4 +64,5 @@ class TestEndToEndRouting:
             labels.add(gate.route(out).label)
 
         assert DecisionLabel.PASS in labels
+        assert DecisionLabel.REVIEW in labels
         assert DecisionLabel.BLOCK in labels
